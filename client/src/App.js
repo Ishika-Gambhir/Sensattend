@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import UploadStudent from "./pages/UploadStudent";
 import ShowAllStudents from "./pages/ShowAllStudents";
+import AnalyseImage from "./pages/AnalyseImage";
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <Routes>
         <Route path="/upload" element={<UploadStudent />} />
         <Route path="/students" element={<ShowAllStudents />} />
+        <Route path="/analyse" element={<AnalyseImage />} />
       </Routes>
       </div>
     </BrowserRouter>

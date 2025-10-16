@@ -1,7 +1,10 @@
 import os
 from flask import Flask, request, jsonify, send_from_directory
 from firebase_admin import credentials, firestore, initialize_app
+import cv2
+import numpy as np
 from flask_cors import CORS
+from utils.deepface_script import face_matched
 
 # --------------------
 # Flask setup
@@ -99,6 +102,66 @@ def delete_student(roll_number):
     doc_ref.delete()
     
     return jsonify({'message': f'Student {roll_number} deleted successfully'}), 200
+
+@app.route('/analyse', methods=['POST'])
+def analyse_image():
+    image_file = request.files.get('image')
+
+    if not image_file:
+        return jsonify({'error': 'No image provided'}), 400
+
+    try:
+        # Convert uploaded image to cv2 format
+        in_memory_file = image_file.read()
+        np_arr = np.frombuffer(in_memory_file, np.uint8)
+        img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+
+        if img is None:
+            return jsonify({'error': 'Invalid image format'}), 400
+
+        # Fetch all students and compare
+        students = []
+        docs = db.collection('students').stream()
+
+        for doc in docs:
+            data = doc.to_dict()
+            image_path = os.path.join(app.root_path, UPLOAD_FOLDER, data['image_path'])
+            
+            if not os.path.exists(image_path):
+                print(f"⚠️ Missing image for {data['roll_number']} at {image_path}")
+                continue
+
+            student_img = cv2.imread(image_path)
+            if student_img is None:
+                print(f"⚠️ Could not read image for {data['roll_number']}")
+                continue
+
+            students.append({
+                'name': data['name'],
+                'roll_number': data['roll_number'],
+                'image': student_img
+            })
+
+        matched_rnos = []
+        for student in students:
+            try:
+                if face_matched(student['image'], img):
+                    matched_rnos.append(student['roll_number'])
+            except Exception as fe:
+                print(f"⚠️ Face match failed for {student['roll_number']}: {fe}")
+
+        print("Matched roll numbers:", matched_rnos)
+
+        return jsonify({
+            'message': 'Image received and processed successfully',
+            'matched': matched_rnos
+        }), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()  # ✅ this shows the real cause in your terminal
+        return jsonify({'error': str(e)}), 500
+
 
 # --------------------
 # Run Flask

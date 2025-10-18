@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import UploadStudent from "./pages/UploadStudent";
-import ShowAllStudents from "./pages/ShowAllStudents";
+  import ShowAllStudents from "./pages/ShowAllStudents";
 import AnalyseImage from "./pages/AnalyseImage";
 
 function App() {
@@ -8,9 +7,8 @@ function App() {
     <BrowserRouter>
       <div style={styles.appContainer}>
       <Routes>
-        <Route path="/upload" element={<UploadStudent />} />
         <Route path="/students" element={<ShowAllStudents />} />
-        <Route path="/analyse" element={<AnalyseImage />} />
+        <Route path="/" element={<AnalyseImage />} />
       </Routes>
       </div>
     </BrowserRouter>

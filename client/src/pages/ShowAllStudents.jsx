@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import UploadStudent from "./UploadStudent";
 
 export default function ShowAllStudents() {
   const [studentData, setStudentData] = useState([]);
@@ -54,6 +55,7 @@ export default function ShowAllStudents() {
 
   return (
     <div style={styles.container}>
+      <UploadStudent/>
       <p>View All Students</p>
       {studentData.length === 0 ? (
         <p>No students found.</p>

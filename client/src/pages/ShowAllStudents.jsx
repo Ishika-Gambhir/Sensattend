@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import UploadStudent from "./UploadStudent";
 
 export default function ShowAllStudents() {
   const [studentData, setStudentData] = useState([]);
@@ -54,18 +55,14 @@ export default function ShowAllStudents() {
 
   return (
     <div style={styles.container}>
+      <UploadStudent/>
       <p>View All Students</p>
       {studentData.length === 0 ? (
         <p>No students found.</p>
       ) : (
         <div style={styles.grid}>
-          {studentData.map((student, idx) => (
+          {studentData['students'].map((student, idx) => (
             <div key={student.roll_number ?? idx} style={styles.card}>
-              <img
-                src={`${process.env.REACT_APP_SERVER_URL}${student.image_url}`}
-                alt={student.name || "Student"}
-                style={styles.img}
-              />
               <div style={{ textAlign: "center", marginTop: 8 }}>
                 <div style={{ fontWeight: 600 }}>
                   {student.name || "Unnamed"}

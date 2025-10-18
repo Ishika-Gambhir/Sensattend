@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function AnalyseImage() {
   const [image, setImage] = useState(null);
@@ -101,6 +102,32 @@ export default function AnalyseImage() {
           {response.matched && <p>Matched Rnos: {(response.matched).join(", ")}</p>}
         </div>
       )}
+      <div
+        style={{
+          marginTop: 20,
+          padding: 20,
+          backgroundColor: "#fff",
+          borderRadius: 10,
+          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+          textAlign: "center",
+        }}
+      >
+        <h3>Want to add/remove students from the database ?</h3>
+        <Link to={'/students'}>
+        <button
+          style={{
+            padding: 10,
+            backgroundColor: "#007bff",
+            color: "#fff",
+            border: "none",
+            borderRadius: 5,
+            cursor: "pointer",
+          }}
+        >
+          Student Dashboard
+        </button>
+        </Link>
+      </div>
     </div>
   );
 }

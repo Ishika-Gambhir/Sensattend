@@ -1,2 +1,4 @@
 server/utils/firebase-key.json
 server/uploads
+/server/utils/__pycache__
+/server/utils/__pycache__

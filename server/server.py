@@ -200,6 +200,16 @@ def analyse_image():
                 "top_matches": matches[:5]
             })
 
+        db.collection('results').add({
+            'timeStamp': firestore.SERVER_TIMESTAMP,
+            'message': f'Detected {len(detections)} face(s), recognized {len(matched_roll_numbers)}',
+            'matched_roll_numbers': matched_roll_numbers,
+            'model': MODEL_NAME,
+            'distance_metric': DISTANCE_METRIC,
+            'threshold': THRESHOLD,
+            'faces': results
+        })
+
         return jsonify({
             'message': f'Detected {len(detections)} face(s), recognized {len(matched_roll_numbers)}',
             'matched_roll_numbers': matched_roll_numbers,
@@ -213,6 +223,137 @@ def analyse_image():
         import traceback
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
+    
+@app.route('/results', methods=['GET'])
+def get_all_results():
+    """Get list of all saved analysis."""
+    try:
+        res = []
+        docs = db.collection('results').stream()
+        
+        for doc in docs:
+            data = doc.to_dict()
+            res.append(data)
+        
+        return jsonify({
+            'data': res
+        }), 200
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/upload_for_analyse', methods=['POST'])
+def upload_for_analyse():
+    """
+    Analyse an image to detect and recognize faces.
+    Saves matched roll numbers for all recognized faces in firebase.
+    """
+    image = request.files.get('image')
+    
+    if image is None:
+        return jsonify({'error': 'No image provided'}), 400
+
+    try:
+        # 1. Load image
+        img_bytes = image.read()
+        img_cv2 = bytes_to_cv2_image(img_bytes)
+        
+        if img_cv2 is None:
+            return jsonify({'error': 'Invalid image format'}), 400
+
+        # 2. Detect all faces in image
+        detections = detect_faces(img_cv2)
+
+        if not detections:
+            return jsonify({
+                'message': 'No faces detected in image',
+                'matched_roll_numbers': [],
+                'faces': []
+            }), 200
+
+        # 3. Load all stored student embeddings
+        stored_students = {}
+        docs = db.collection('students').stream()
+        
+        for doc in docs:
+            data = doc.to_dict()
+            roll_number = data.get('roll_number')
+            stored_students[roll_number] = {
+                'name': data.get('name'),
+                'embedding': data.get('embedding')
+            }
+
+        # 4. Process each detected face
+        results = []
+        matched_roll_numbers = []
+
+        for detection in detections:
+            face_img = detection["face"]
+            face_box = detection.get("facial_area")
+            
+            # Extract embedding for this face
+            query_embedding = get_embedding_from_face(face_img)
+            
+            # Find matches
+            matches = []
+            for roll_number, student_data in stored_students.items():
+                stored_embedding = student_data.get("embedding")
+                
+                if stored_embedding is None:
+                    continue
+                
+                # Calculate distance
+                distance = find_distance(
+                    alpha_embedding=query_embedding,
+                    beta_embedding=stored_embedding,
+                    distance_metric=DISTANCE_METRIC
+                )
+                
+                matches.append({
+                    "roll_number": roll_number,
+                    "name": student_data.get("name"),
+                    "distance": distance,
+                    "verified": distance <= THRESHOLD
+                })
+            
+            # Sort by distance (best match first)
+            matches.sort(key=lambda x: x["distance"])
+            
+            # Get best verified match
+            best_match = None
+            verified_matches = [m for m in matches if m["verified"]]
+            
+            if verified_matches:
+                best_match = verified_matches[0]
+                matched_roll_numbers.append(best_match["roll_number"])
+            
+            results.append({
+                "face_box": face_box,
+                "best_match": best_match,
+                "top_matches": matches[:5]
+            })
+        
+        try:
+            # save results to firebase
+            db.collection('results').add({
+                'timeStamp': firestore.SERVER_TIMESTAMP,
+                'message': f'Detected {len(detections)} face(s), recognized {len(matched_roll_numbers)}',
+                'matched_roll_numbers': matched_roll_numbers,
+                'model': MODEL_NAME,
+                'distance_metric': DISTANCE_METRIC,
+                'threshold': THRESHOLD,
+                'faces': results
+            })
+            return jsonify({"message": "Image processed successfully."})
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500     
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
 
 
 @app.route('/config', methods=['GET'])

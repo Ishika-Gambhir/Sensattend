@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { Box, Button, Text, VStack, Heading } from "@chakra-ui/react";
 import UploadStudent from "./UploadStudent";
+import bg2 from "../resources/bg2.jpeg";
 
 export default function ShowAllStudents() {
   const [studentData, setStudentData] = useState([]);
@@ -54,34 +56,53 @@ export default function ShowAllStudents() {
   }
 
   return (
-    <div style={styles.container}>
-      <UploadStudent/>
-      <p>View All Students</p>
-      {studentData.length === 0 ? (
-        <p>No students found.</p>
-      ) : (
-        <div style={styles.grid}>
-          {studentData['students'].map((student, idx) => (
-            <div key={student.roll_number ?? idx} style={styles.card}>
-              <div style={{ textAlign: "center", marginTop: 8 }}>
-                <div style={{ fontWeight: 600 }}>
-                  {student.name || "Unnamed"}
-                </div>
-                <div style={{ color: "#666", fontSize: 14 }}>
-                  Roll: {student.roll_number ?? "N/A"}
-                </div>
-                <button
-                  style={styles.deleteButton}
+    <Box
+      backgroundImage={bg2}
+      backgroundSize={"cover"}
+      height={"100vh"}
+      style={styles.container}
+    >
+      <VStack
+        style={{ backdropFilter: "blur(6px)" }}
+        overflowY={"auto"}
+        height={"100vh"}
+        width={'100%'}
+      >
+        <UploadStudent />
+        <Heading m={5}>
+          {" "}
+          View All Students
+        </Heading>
+        {studentData.length === 0 ? (
+          <p>No students found.</p>
+        ) : (
+          <div style={styles.grid}>
+            {studentData["students"].map((student, idx) => (
+              <VStack
+                key={student.roll_number ?? idx}
+                borderRadius={"25"}
+                p={5}
+                m={5}
+                backgroundColor={"#4545d28c"}
+                shadow={"xl"}
+              >
+                <Text fontWeight={"bold"}>{student.name || "Unnamed"} </Text>
+                <Text color={"#2b15f0ff"}>
+                  Roll No: {student.roll_number ?? "N/A"}
+                </Text>
+                <Button
+                  size={"sm"}
+                  colorScheme={"red"}
                   onClick={() => onDelete(student)}
                 >
                   Delete
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+                </Button>
+              </VStack>
+            ))}
+          </div>
+        )}
+      </VStack>
+    </Box>
   );
 }
 

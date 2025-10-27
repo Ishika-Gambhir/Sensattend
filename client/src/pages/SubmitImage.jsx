@@ -1,14 +1,10 @@
+import { Box, VStack, Heading, Button, Image, Text } from "@chakra-ui/react";
 import { useState } from "react";
-import { Box, Button, Heading, Image, VStack } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
 import bg1 from "../resources/bg1.png";
-import List from "../components/List";
-
-export default function AnalyseImage() {
+export default function SubmitImage() {
   const [image, setImage] = useState(null);
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [students, setstudents] = useState([]);
   const handleSubmit = async () => {
     // e.preventDefault();
 
@@ -24,16 +20,19 @@ export default function AnalyseImage() {
     setResponse(null);
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/analyse`, {
+      const res = await fetch(`${process.env.REACT_APP_SERVER_URL}//upload_for_analyse`, {
         method: "POST",
         body: formData,
       });
 
       const data = await res.json();
 
-      if (res.ok) { // res.status===200
-        setstudents(data['matched_roll_numbers']);
+      if (res.ok) {
+        // res.status===200
+        // setstudents(data["matched_roll_numbers"]);
+        setResponse(data['message'])
       } else {
+        setResponse(data['error'])
         alert(`Error: ${data.error}`);
       }
     } catch (err) {
@@ -45,9 +44,12 @@ export default function AnalyseImage() {
   };
 
   return (
-    <Box backgroundImage={bg1} backgroundSize={"cover"} height={"100vh"}
->
-      <VStack style={{ backdropFilter: "blur(6px)" }} overflowY={'auto'} height={"100vh"}>
+    <Box backgroundImage={bg1} backgroundSize={"cover"} height={"100vh"}>
+      <VStack
+        style={{ backdropFilter: "blur(6px)" }}
+        overflowY={"auto"}
+        height={"100vh"}
+      >
         <Heading fontSize={60} color={"rgba(106, 86, 254, 0.67)"}>
           SENSATTEND
         </Heading>
@@ -72,24 +74,28 @@ export default function AnalyseImage() {
             // AND OR Ternary
             image && (
               <>
-              <Image src={URL.createObjectURL(image)} alt="submitted image"
-                    objectFit="contain"
-                    // width="100%"
-                    height="20vh"
-                    borderRadius="md"
-                    boxShadow="md" />
-              <Button isLoading={loading} loadingText="Analyzing..." onClick={handleSubmit}>Analyze Image</Button>
+                <Image
+                  src={URL.createObjectURL(image)}
+                  alt="submitted image"
+                  objectFit="contain"
+                  // width="100%"
+                  height="20vh"
+                  borderRadius="md"
+                  boxShadow="md"
+                />
+                <Button
+                  isLoading={loading}
+                  loadingText="Analyzing..."
+                  onClick={handleSubmit}
+                >
+                  Analyze Image
+                </Button>
               </>
             )
           }
+          {response && <Text>{response}</Text>}
         </VStack>
-        {students.length && (
-         <List items={students}  text={"Present Students"}/>
-        )}
       </VStack>
     </Box>
   );
 }
-
-// <img src={} alt={}/>
-// <List title={} items={}/>

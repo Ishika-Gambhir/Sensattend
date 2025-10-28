@@ -406,38 +406,18 @@ def get_config():
 
 # ==================== Link Frontend ====================
 
-
-# @app.route("/", defaults={"path": ""})
-# @app.route("/<path:path>")
-# def serve_react(path):
-#     print("THIS CASE")
-#     # Don't serve index.html for api routes
-#     if path.startswith("api"):
-#         return jsonify({"error": "API endpoint not found"}), 404
-
-#     # Check if it's a static file (JS, CSS, images, etc.)
-#     full_path = os.path.join(app.static_folder, path)
-#     if path and os.path.isfile(full_path):
-#         return send_from_directory(app.static_folder, path)
-
-
-#     # For everything else (React routes), serve index.html
-#     return app.send_static_file("index.html")
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def serve_react(path):
-    print(f"THIS CASE: {path}")
 
     # API routes
     if path.startswith("api"):
         return jsonify({"error": "API endpoint not found"}), 404
 
-    # Serve static files from build folder
     file_path = os.path.join(app.static_folder, path)
     if path and os.path.exists(file_path) and os.path.isfile(file_path):
         return send_from_directory(app.static_folder, path)
 
-    # Everything else gets index.html (React Router handles it)
     return send_from_directory(app.static_folder, "index.html")
 
 
@@ -449,9 +429,6 @@ if __name__ == "__main__":
     print(f"Model: {MODEL_NAME}")
     print(f"Distance Metric: {DISTANCE_METRIC}")
     print(f"Threshold: {THRESHOLD}")
-    print("\n=== REGISTERED ROUTES ===")
-    for rule in app.url_map.iter_rules():
-        print(f"{rule.endpoint}: {rule.rule} {rule.methods}")
     print("=" * 50)
 
     app.run(debug=True, use_reloader=False)

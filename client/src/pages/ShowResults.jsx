@@ -15,7 +15,7 @@ export default function ShowResults() {
   async function fetchResults() {
     try {
         const response = await fetch(
-            `${process.env.REACT_APP_SERVER_URL}/results`, {
+            `${process.env.REACT_APP_SERVER_URL}/api/results`, {
                 method: "GET",
                 headers: {
                     'Content-Type':"application/json"

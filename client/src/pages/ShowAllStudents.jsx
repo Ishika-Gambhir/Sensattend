@@ -10,7 +10,7 @@ export default function ShowAllStudents() {
     async function fetchStudents() {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_SERVER_URL}/students`,
+          `${process.env.REACT_APP_SERVER_URL}/api/students`,
           {
             method: "GET",
             header: {
@@ -35,7 +35,7 @@ export default function ShowAllStudents() {
     if (window.confirm(`Delete ${student.name}?`)) {
       try {
         const res = await fetch(
-          `${process.env.REACT_APP_SERVER_URL}/students/${student.roll_number}`,
+          `${process.env.REACT_APP_SERVER_URL}/api/students/${student.roll_number}`,
           { method: "DELETE" }
         );
         const data = await res.json();

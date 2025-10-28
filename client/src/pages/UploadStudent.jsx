@@ -33,7 +33,7 @@ export default function UploadStudent() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/students`, {
+      const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/students`, {
         method: "POST",
         body: formData,
       });

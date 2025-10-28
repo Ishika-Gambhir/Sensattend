@@ -20,7 +20,7 @@ export default function SubmitImage() {
     setResponse(null);
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_SERVER_URL}//upload_for_analyse`, {
+      const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/upload_for_analyse`, {
         method: "POST",
         body: formData,
       });

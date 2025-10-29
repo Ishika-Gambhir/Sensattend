@@ -57,25 +57,25 @@ export default function UploadStudent() {
   return (
     <>
       <VStack gap={5}>
-        <Heading >Add a new Student</Heading>
+        <Heading color={"black"}>Add a New Student</Heading>
         <VStack
-          backgroundColor={"#4545d28c"}
+          backgroundColor={"#8aa1a6a5"}
           p={10}
           m={10}
           borderRadius={"25"}
           shadow={"2xl"}
         >
           <HStack>
-            <FormLabel whiteSpace={"nowrap"}>Name : </FormLabel>
-            <Input
+            <FormLabel whiteSpace={"nowrap"} color={"black"}>Name : </FormLabel>
+            <Input _placeholder={{ color: "gray.700" }}
               type="string"
               placeholder="Student Name"
               onChange={(e) => setName(e.target.value)}
             />
           </HStack>
           <HStack>
-            <FormLabel whiteSpace={"nowrap"}>Roll No : </FormLabel>
-            <Input
+            <FormLabel whiteSpace={"nowrap"} color={"black"}>Roll No : </FormLabel>
+            <Input  _placeholder={{ color: "gray.700" }}
               type="number"
               placeholder="Roll No"
               onChange={(e) => setRollNumber(e.target.value)}
@@ -89,7 +89,7 @@ export default function UploadStudent() {
             style={{ display: "none" }}
             onChange={(e) => setImage(e.target.files[0])}
           />
-          <Button as="span" colorScheme="teal" variant="solid" size="md">
+          <Button as="span" colorScheme="green" variant="solid" size="md">
             Select Image
           </Button>
         </label>

@@ -44,13 +44,14 @@ export default function SubmitImage() {
   };
 
   return (
-    <Box backgroundImage={bg1} backgroundSize={"cover"} height={"100vh"}>
+    <Box backgroundImage={bg1} backgroundSize={"cover"} height={"100vh"} width={'100%'}>
       <VStack
-        style={{ backdropFilter: "blur(6px)" }}
+       backgroundColor={"#ffffff55"}
+        style={{ backdropFilter: "blur(8px)" }}
         overflowY={"auto"}
         height={"100vh"}
       >
-        <Heading fontSize={60} color={"rgba(106, 86, 254, 0.67)"}>
+        <Heading fontSize={80} color={"rgba(43, 18, 230, 0.82)"}>
           SENSATTEND
         </Heading>
         <VStack>

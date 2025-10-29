@@ -1,4 +1,4 @@
-import { Box, Heading, VStack } from "@chakra-ui/react";
+import { Box, Button, Heading, VStack } from "@chakra-ui/react";
 import bg1 from "../resources/bg1.png";
 import { useEffect, useState } from "react";
 import List from "../components/List";
@@ -70,6 +70,7 @@ export default function ShowResults() {
         <Heading fontSize={60} color={"rgba(43, 18, 230, 0.82)"}>
           RESULTS
         </Heading>
+        <Box><Button colorScheme={'green'} onClick={fetchResults}>Refresh</Button></Box>
         {resData &&
           resData.map((item, key) => (
             <List

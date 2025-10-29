@@ -10,7 +10,7 @@ function App() {
   return (
     <BrowserRouter>
       <div style={styles.appContainer}>
-        <HStack height={"100vh"} width={"100%"} borderWidth={1} >
+        <HStack height={"100vh"} width={"100%"} borderWidth={1} gap={0} >
           <Navbar />
           <Routes>
             <Route path="/students" element={<ShowAllStudents />} />

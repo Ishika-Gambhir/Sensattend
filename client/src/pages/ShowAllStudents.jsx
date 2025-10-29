@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Box, Button, Text, VStack, Heading } from "@chakra-ui/react";
 import UploadStudent from "./UploadStudent";
-import bg2 from "../resources/bg2.jpeg";
+import bg3 from "../resources/bg3.jpg";
 
 export default function ShowAllStudents() {
   const [studentData, setStudentData] = useState([]);
@@ -57,24 +57,23 @@ export default function ShowAllStudents() {
 
   return (
     <Box
-      backgroundImage={bg2}
+      backgroundImage={bg3}
       backgroundSize={"cover"}
-      height={"100vh"}
-      style={styles.container}
+      height={"100vh"}  width={'100%'}
     >
       <VStack
-        style={{ backdropFilter: "blur(6px)" }}
+        style={{ backdropFilter: "blur(8px)", backgroundColor:'#ffffff67' }}
         overflowY={"auto"}
         height={"100vh"}
         width={'100%'}
       >
         <UploadStudent />
-        <Heading m={5}>
+        <Heading m={5} color={"black"}>
           {" "}
           View All Students
         </Heading>
         {studentData.length === 0 ? (
-          <p>No students found.</p>
+          <p color={"black"}>No students found.</p>
         ) : (
           <div style={styles.grid}>
             {studentData["students"].map((student, idx) => (
@@ -83,11 +82,11 @@ export default function ShowAllStudents() {
                 borderRadius={"25"}
                 p={5}
                 m={5}
-                backgroundColor={"#4545d28c"}
-                shadow={"xl"}
+                backgroundColor={"#8aa1a6a5"}
+                shadow={"3xl"}
               >
-                <Text fontWeight={"bold"}>{student.name || "Unnamed"} </Text>
-                <Text color={"#2b15f0ff"}>
+                <Text fontWeight={700} fontSize={"1.2rem"} textAlign={"center"} >{student.name || "Unnamed"} </Text>
+                <Text color={"grey.800"}>
                   Roll No: {student.roll_number ?? "N/A"}
                 </Text>
                 <Button
@@ -107,30 +106,6 @@ export default function ShowAllStudents() {
 }
 
 const styles = {
-  container: {
-    height: "100%",
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  img: {
-    width: 120,
-    height: 120,
-    objectFit: "cover",
-    borderRadius: "50%",
-    marginBottom: 12,
-  },
-  card: {
-    border: "1px solid #ddd",
-    borderRadius: 8,
-    padding: 12,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    background: "#fff",
-  },
   grid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
@@ -139,15 +114,5 @@ const styles = {
     padding: 16,
     boxSizing: "border-box",
     maxWidth: 1000,
-  },
-  deleteButton: {
-    marginTop: 6,
-    padding: "4px 8px",
-    fontSize: 12,
-    color: "white",
-    backgroundColor: "red",
-    border: "none",
-    borderRadius: 4,
-    cursor: "pointer",
   },
 };

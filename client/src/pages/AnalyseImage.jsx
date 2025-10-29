@@ -45,10 +45,11 @@ export default function AnalyseImage() {
   };
 
   return (
-    <Box backgroundImage={bg1} backgroundSize={"cover"} height={"100vh"}
+    <Box backgroundImage={bg1} backgroundSize={"cover"} height={"100vh"}  width={'100%'}
 >
-      <VStack style={{ backdropFilter: "blur(6px)" }} overflowY={'auto'} height={"100vh"}>
-        <Heading fontSize={60} color={"rgba(106, 86, 254, 0.67)"}>
+      <VStack style={{ backdropFilter: "blur(8px)" }}
+       backgroundColor={"#ffffff55"} overflowY={'auto'} height={"100vh"}>
+        <Heading fontSize={80} color={"rgba(43, 18, 230, 0.82)"}>
           SENSATTEND
         </Heading>
         <VStack>
